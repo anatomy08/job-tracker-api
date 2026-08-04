@@ -42,7 +42,11 @@ public class JobApplicationsController : ControllerBase
         {
             CompanyName = request.CompanyName,
             PositionTitle = request.PositionTitle,
-            Status = request.Status
+            Status = request.Status,
+            DateApplied = request.DateApplied!.Value,
+            JobUrl = request.JobUrl,
+            Notes = request.Notes,
+            CreatedAt = DateTime.UtcNow
         };
 
         _context.JobApplications.Add(application);
@@ -65,6 +69,10 @@ public class JobApplicationsController : ControllerBase
         application.CompanyName = request.CompanyName;
         application.PositionTitle = request.PositionTitle;
         application.Status = request.Status;
+        application.DateApplied = request.DateApplied!.Value;
+        application.JobUrl = request.JobUrl;
+        application.Notes = request.Notes;
+        application.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
@@ -89,4 +97,4 @@ public class JobApplicationsController : ControllerBase
         return NoContent();
     }
 
-}
+} 
