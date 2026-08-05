@@ -3,13 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 // Add services to the container.
 
 builder.Services.AddControllers();
 
-
+// Configure EF Core to use the local SQLite database from appsettings.json.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -23,6 +21,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // FOR SWAGGER UI TO VIEW ENDPOINTS
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "Job Tracker API v1");
+    });
 }
 
 app.UseHttpsRedirection();

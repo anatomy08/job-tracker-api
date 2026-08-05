@@ -18,12 +18,18 @@ public class JobApplicationsController : ControllerBase
         _context = context;
     }
 
+    // GET ALL DATA RECORD
+    [ProducesResponseType(typeof(List<JobApplication>), StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<List<JobApplication>> Get()
     {
         return await _context.JobApplications.ToListAsync();
     }
 
+
+    // GETS THE SPECIFIC ID DATA
+    [ProducesResponseType(typeof(JobApplication), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<JobApplication>> GetById(int id)
     {
@@ -33,7 +39,9 @@ public class JobApplicationsController : ControllerBase
         return application != null ? Ok(application) : NotFound();
     }
 
-
+    // CREATE NEW DATA
+    [ProducesResponseType(typeof(JobApplication), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
     public async Task<ActionResult<JobApplication>> Post(
     [FromBody] CreateJobApplicationDto request)
@@ -54,6 +62,11 @@ public class JobApplicationsController : ControllerBase
 
         return Created($"/api/jobapplications/{application.Id}", application);
     }
+
+    // EDIT THE DATA RECORD OF SPECIFIC ID
+    [ProducesResponseType(typeof(JobApplication), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult<JobApplication>> Put(int id,
@@ -81,6 +94,10 @@ public class JobApplicationsController : ControllerBase
 
     }
 
+
+    // HARD DELETE DATA PERMANENTLY DELETE
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
