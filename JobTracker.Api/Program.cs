@@ -36,3 +36,9 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Allows other projects (such as integration tests) to reference the generated Program class.
+public partial class Program
+{
+
+}

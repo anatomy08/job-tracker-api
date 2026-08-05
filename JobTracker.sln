@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobTracker.Api", "JobTracker.Api\JobTracker.Api.csproj", "{D19295BE-7395-4D69-A343-BE9C6E48F666}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobTracker.Api.Tests", "JobTracker.Api.Tests\JobTracker.Api.Tests.csproj", "{91316B8C-6BC9-47F4-8E85-989398F696DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{D19295BE-7395-4D69-A343-BE9C6E48F666}.Release|x64.Build.0 = Release|Any CPU
 		{D19295BE-7395-4D69-A343-BE9C6E48F666}.Release|x86.ActiveCfg = Release|Any CPU
 		{D19295BE-7395-4D69-A343-BE9C6E48F666}.Release|x86.Build.0 = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Debug|x86.Build.0 = Debug|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|x64.Build.0 = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|x86.ActiveCfg = Release|Any CPU
+		{91316B8C-6BC9-47F4-8E85-989398F696DD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
