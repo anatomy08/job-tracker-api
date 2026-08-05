@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Json;
+using JobTracker.Api.Models;
 
 namespace JobTracker.Api.Tests;
 
@@ -90,7 +92,18 @@ public class JobApplicationsApiTests : IClassFixture<JobTrackerApiFactory>
             "/api/jobapplications",
             request);
 
+        Console.WriteLine(response.ToString());
+
         // Assert: valid input must create a record and return HTTP 201.
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+
+        // Read the JSON object returned by the API.
+        JobApplication? createdApplication =
+            await response.Content.ReadFromJsonAsync<JobApplication>();
+
+        // Confirm the API returned the expected saved data.
+        Assert.NotNull(createdApplication);
+        Assert.Equal("Nintendo", createdApplication.CompanyName);
+        Assert.Equal("Gameplay Programmer", createdApplication.PositionTitle);
     }
 }
