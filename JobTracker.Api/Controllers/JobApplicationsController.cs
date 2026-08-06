@@ -12,10 +12,13 @@ namespace JobTracker.Api.Controllers;
 public class JobApplicationsController : ControllerBase
 {
     private readonly AppDbContext _context; // This is a private field that holds a reference to the application's database context. The database context is used to interact with the database.
+    private readonly IHostEnvironment _environment;
 
-    public JobApplicationsController(AppDbContext context)
+
+    public JobApplicationsController(AppDbContext context, IHostEnvironment environment)
     {
         _context = context;
+        _environment = environment;
     }
 
     // GET ALL DATA RECORD
@@ -46,6 +49,15 @@ public class JobApplicationsController : ControllerBase
     public async Task<ActionResult<JobApplication>> Post(
     [FromBody] CreateJobApplicationDto request)
     {
+        // AUTHENTICATION FOR POST
+        if (_environment.IsProduction())
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new
+            {
+                message = "This public portfolio API is read-only. Only GET requests are available."
+            });
+        }
+
         JobApplication application = new JobApplication
         {
             CompanyName = request.CompanyName,
@@ -72,6 +84,16 @@ public class JobApplicationsController : ControllerBase
     public async Task<ActionResult<JobApplication>> Put(int id,
     [FromBody] UpdateJobApplicationDto request)
     {
+
+        // AUTHENTICATION FOR PUT
+        if (_environment.IsProduction())
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new
+            {
+                message = "This public portfolio API is read-only. Only GET requests are available."
+            });
+        }
+
         JobApplication? application = await _context.JobApplications.FindAsync(id);
 
         if (application == null)
@@ -101,6 +123,17 @@ public class JobApplicationsController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
+
+        // AUTHENTICATION FOR DELETE
+        if (_environment.IsProduction())
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new
+            {
+                message = "This public portfolio API is read-only. Only GET requests are available."
+            });
+        }
+
+
         JobApplication? application = await _context.JobApplications.FindAsync(id);
 
         if (application == null)
