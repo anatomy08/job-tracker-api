@@ -62,10 +62,10 @@ public class JobApplicationsController : ControllerBase
     }
 
     // CREATE NEW DATA
-    [ProducesResponseType(typeof(JobApplication), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(JobApplicationDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost]
-    public async Task<ActionResult<JobApplication>> Post([FromBody] CreateJobApplicationDto request)
+    public async Task<ActionResult<JobApplicationDto>> Post([FromBody] CreateJobApplicationDto request)
     {
         if (_environment.IsProduction())
         {
@@ -86,10 +86,25 @@ public class JobApplicationsController : ControllerBase
             CreatedAt = DateTime.UtcNow
         };
 
+    
+
         _context.JobApplications.Add(application);
+
         await _context.SaveChangesAsync();
 
-        return Created($"/api/jobapplications/{application.Id}", application);
+
+        // Map the saved application to JobApplicationDto.
+        JobApplicationDto jobApplicationDto = new JobApplicationDto
+        {
+            CompanyName = application.CompanyName,
+            Status = application.Status
+        };
+
+
+        //return Created($"/api/jobapplications/{application.Id}", application);
+
+        return CreatedAtAction(nameof(GetByIdDto), new { id = application.Id }, jobApplicationDto);
+
     }
 
     // EDIT THE DATA RECORD OF A SPECIFIC ID
