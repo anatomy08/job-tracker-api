@@ -3,6 +3,7 @@ using JobTracker.Api.DTOs;
 using JobTracker.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace JobTracker.Api.Controllers;
 
@@ -17,6 +18,39 @@ public class JobApplicationsController : ControllerBase
     {
         _context = context;
         _environment = environment;
+    }
+
+
+    // PRACTICE 13: CREATE A NEW GET ENDPOINT FILTERS JOBAPPLICATION BY STATUS AND RETURN A LIST OF DTO'S
+    [ProducesResponseType(typeof(List<JobApplicationDto>), StatusCodes.Status200OK)]
+    [HttpGet("filter")] // NEW END POINT  : GET /api/jobapplications/filter
+    public async Task<ActionResult<List<JobApplicationDto>>> GetFiltered([FromQuery] string? status)
+    {
+        // 1. Start with the JobApplications database query.
+        IQueryable<JobApplication> query = _context.JobApplications;
+           
+
+        // 2. If status was provided, filter the query.
+        // Make the comparison case-insensitive.
+
+        if (!string.IsNullOrWhiteSpace(status))
+        {
+            query = query.Where(application => application.Status.ToLower() == status.ToLower());
+        }
+
+      //  application.Status.ToLower() == status.ToLower()
+        // 3. Map every remaining JobApplication to JobApplicationDto.
+
+        List<JobApplicationDto> applicationdtos = await query
+            .Select(application => new JobApplicationDto
+            {
+                CompanyName = application.CompanyName,
+                Status = application.Status
+            }).ToListAsync();
+
+        // 4. Execute the query asynchronously and return 200 OK.
+
+        return Ok(applicationdtos);
     }
 
     // PRACTICE 10: GET A DTO BY ID
@@ -107,12 +141,13 @@ public class JobApplicationsController : ControllerBase
 
     }
 
-    // EDIT THE DATA RECORD OF A SPECIFIC ID
-    [ProducesResponseType(typeof(JobApplication), StatusCodes.Status200OK)]
+    // Practice 12
+    [ProducesResponseType(typeof(JobApplicationDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<JobApplication>> Put(int id, [FromBody] UpdateJobApplicationDto request)
+    public async Task<ActionResult<JobApplicationDto>> Put(int id, [FromBody] UpdateJobApplicationDto request)
     {
         if (_environment.IsProduction())
         {
@@ -139,7 +174,13 @@ public class JobApplicationsController : ControllerBase
 
         await _context.SaveChangesAsync();
 
-        return Ok(application);
+        JobApplicationDto applicationDto = new JobApplicationDto
+        {
+            CompanyName = application.CompanyName,
+            Status = application.Status
+        };
+
+        return Ok(applicationDto);
     }
 
     // HARD DELETE DATA PERMANENTLY
