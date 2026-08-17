@@ -21,6 +21,35 @@ public class JobApplicationsController : ControllerBase
     }
 
 
+    //PRACTICE 14 
+    [ProducesResponseType(typeof(List<JobApplicationDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HttpGet("paged")]
+    public async Task<ActionResult<List<JobApplicationDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+    {
+        if (page < 1 || pageSize < 1)
+        {
+            return BadRequest("Page and pageSize must be greater than zero.");
+        }
+
+        int numberToSkip = (page - 1) * pageSize;
+
+        List<JobApplicationDto> applicationDtos = await _context.JobApplications
+            .OrderBy(application => application.Id)
+            .Skip(numberToSkip)
+            .Take(pageSize)
+            .Select(application => new JobApplicationDto
+            {
+                CompanyName = application.CompanyName,
+                Status = application.Status
+
+            })
+            .ToListAsync();
+
+        return Ok(applicationDtos);
+    }
+
+
     // PRACTICE 13: CREATE A NEW GET ENDPOINT FILTERS JOBAPPLICATION BY STATUS AND RETURN A LIST OF DTO'S
     [ProducesResponseType(typeof(List<JobApplicationDto>), StatusCodes.Status200OK)]
     [HttpGet("filter")] // NEW END POINT  : GET /api/jobapplications/filter
