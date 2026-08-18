@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - practice-exercise-branch
+      - Practice-Excercise-Branch
   pull_request:
     branches:
       - main
