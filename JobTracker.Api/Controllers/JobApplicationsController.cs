@@ -21,11 +21,15 @@ public class JobApplicationsController : ControllerBase
     }
 
 
-    //PRACTICE 14 
-    [ProducesResponseType(typeof(List<JobApplicationDto>), StatusCodes.Status200OK)]
+
+
+    // PRACTICE 15 ADDED TOTAL PAGES AND TOTAL RECORDS FROM GET PAGED
+    [ProducesResponseType(typeof(PagedJobApplicationsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("paged")]
-    public async Task<ActionResult<List<JobApplicationDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 5)
+    public async Task<ActionResult<PagedJobApplicationsDto>> GetPaged(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 5)
     {
         if (page < 1 || pageSize < 1)
         {
@@ -34,6 +38,16 @@ public class JobApplicationsController : ControllerBase
 
         int numberToSkip = (page - 1) * pageSize;
 
+
+        // 1. Count every job application in the database
+        int totalRecords = await _context.JobApplications
+            .CountAsync();
+
+        // 2. Calculate how many pages exist
+        int totalPages = (int)Math.Ceiling(
+            totalRecords / (double)pageSize);
+
+        // 3. existing paged query
         List<JobApplicationDto> applicationDtos = await _context.JobApplications
             .OrderBy(application => application.Id)
             .Skip(numberToSkip)
@@ -42,11 +56,41 @@ public class JobApplicationsController : ControllerBase
             {
                 CompanyName = application.CompanyName,
                 Status = application.Status
-
             })
             .ToListAsync();
 
-        return Ok(applicationDtos);
+        PagedJobApplicationsDto pagedResult = new PagedJobApplicationsDto
+        {
+            Items = applicationDtos,
+            Page = page,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = totalPages
+        };
+
+        return Ok(pagedResult);
+
+        /*
+        IT WILL RETURN A JSON LIKE THIS
+        {
+    "items": [
+        {
+            "companyName": "Company A",
+            "status": "Applied"
+        },
+        {
+            "companyName": "Company B",
+            "status": "Interview"
+        }
+    ],
+    "page": 1,
+    "pageSize": 5,
+    "totalRecords": 12,
+    "totalPages": 3
+}
+
+
+        */
     }
 
 
@@ -104,6 +148,7 @@ public class JobApplicationsController : ControllerBase
 
         return Ok(dto);
     }
+
 
     // GET ALL DATA RECORDS
     [ProducesResponseType(typeof(List<JobApplication>), StatusCodes.Status200OK)]
