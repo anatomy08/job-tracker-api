@@ -1,5 +1,7 @@
 # Job Tracker API
 
+[![.NET CI](https://github.com/anatomy08/job-tracker-api/actions/workflows/dotnet-ci.yml/badge.svg)](https://github.com/anatomy08/job-tracker-api/actions/workflows/dotnet-ci.yml)
+
 A RESTful Job Application Tracker API built with ASP.NET Core .NET 10.
 
 The project demonstrates CRUD API development, DTO validation, Entity Framework Core, automated integration testing, Azure SQL Database, and Azure App Service deployment.
